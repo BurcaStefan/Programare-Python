@@ -1,0 +1,242 @@
+#Ex1
+def Fibonacci(n):
+    if n <= 0:
+        return "Numarul nu trebuie sa fie negativ"
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    
+    fiblist = [0, 1]
+    
+    for i in range(2, n):
+        next_number = fiblist[i-1] + fiblist[i-2]
+        fiblist.append(next_number)
+    
+    return fiblist
+
+nr=int(input())
+result = Fibonacci(nr)
+print(result)
+
+
+#Ex2
+def Primnumber(list):
+    nr=[nr for nr in list if len([y for y in range(2,nr//2+1) if nr % y==0])==0]
+    print(nr[:])
+    
+numbers=[8,9,3,5,142093,511,35811,3911,57,47,43,2]
+Primnumber(numbers)
+
+
+#Ex3
+def Intersection(A,B):
+    result=[]
+    for nr1 in A:
+        for nr2 in B:
+           if nr1==nr2:
+               result.append(nr1)
+    return sorted(result)
+
+def Reunion(A,B):
+    result=[]
+    for nr in A:
+        result.append(nr)
+    for nr in B:
+        result.append(nr)
+    return sorted(set(result))
+    
+
+list1=[1,3,4,5,7,8,9,10,11,13,15]
+list2=[2,4,5,6,8,9,10,12,14]
+
+AintersectedB=Intersection(list1,list2)
+AreunitedB=Reunion(list1,list2)
+print("Intersectia: ", AintersectedB)
+print("Reuniunea: ", AreunitedB)
+
+
+#Ex4
+def Compose(notes, moves, start):
+    result = []
+    position = start
+
+    result.append(notes[position])
+
+    for move in moves:
+        position = (position + move) % len(notes)  
+        result.append(notes[position])
+
+    return result
+
+notes = ["do", "re", "mi", "fa", "sol"]
+moves = [1, -3, 4, 2]
+start = 2
+
+song = Compose(notes, moves, start)
+print(song)
+
+
+#Ex5
+def Replacediagonali(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if j<i:
+                matrix[i][j]=0
+    return matrix
+
+matrix=[[1, 2, 3, 2, 1, 1],
+        [2, 4, 4, 3, 7, 2],
+        [5, 5, 2, 5, 6, 4],
+        [6, 6, 7, 6, 7, 5],
+        [5, 5, 2, 5, 6, 4],
+        [6, 6, 7, 6, 7, 5]] 
+
+result=Replacediagonali(matrix)
+
+for i in range(len(result)):
+    print(result[i])
+
+
+#Ex6
+def Function(x,*arg):
+    alllist=[]
+    result=[]
+    for list in arg:
+        for nr in list:
+            alllist.append(nr)
+    
+    for nr in alllist:
+        count=0
+        for i in range(len(alllist)):
+            if nr==alllist[i]:
+                count+=1
+        if count==x:
+            result.append(nr) 
+    return set(result)
+    
+print(Function(2,[10,20,30,40],[11,22,30,44],[10,23,34]))
+
+
+#Ex7
+def Ispalindrom(nr):
+    aux=nr
+    palin=0
+    while nr>0:
+        palin=palin*10+nr%10
+        nr=nr//10
+    
+    if aux==palin:
+        return palin
+    else:
+        return 0
+
+def Palindromtuple(list):
+    x=0
+    y=0
+    for nr in list:
+        palindrom=Ispalindrom(nr)
+        if palindrom!=0:
+            x+=1
+            if palindrom>y:
+                y=palindrom
+    return x,y
+            
+listofnumbers=[121,345,674,33,909]
+print(Palindromtuple(listofnumbers))
+
+
+#Ex8
+def Asciidivizible(listofstrings, flag, x=1):
+    list=[]
+    finallist=[]
+    for string in listofstrings:
+        if flag:
+            for ch in string:
+                if ord(ch)%x==0:
+                    list.append(ch)
+            finallist+=list
+            list.clear()
+        if flag==False:
+            for ch in string:
+                if ord(ch)%x!=0:
+                    list.append(ch)
+            finallist+=list
+            list.clear()
+        
+    print(finallist)
+    
+    
+Asciidivizible(["test", "hello", "lab"],False,2)
+
+
+#Ex9
+def Findplace(matrix):
+    blocked = []
+    
+    for i in range(1, len(matrix)):
+        for j in range(len(matrix[i])):
+            for k in range(i):
+                if matrix[k][j] >= matrix[i][j]:
+                    blocked.append((i, j))
+                    break
+    
+    return blocked
+
+matrix = [
+    [1, 2, 3, 2, 1, 1],
+    [2, 4, 4, 3, 7, 2],
+    [5, 5, 2, 5, 6, 4],
+    [6, 6, 7, 6, 7, 5]
+]
+
+blockedspectators = Findplace(matrix)
+print(blockedspectators)
+
+
+#Ex10
+from itertools import zip_longest
+
+def Combinelists(*lists):
+    return list(zip_longest(*lists))
+
+list1 = [1, 2, 3, 4, 5]
+list2 = [5, 6, 7]
+list3 = ["a", "b", "c"]
+
+result = Combinelists(list1, list2, list3)
+print(result)
+
+
+#Ex11
+def Sortbythirdchar(tupleslist):
+    return sorted(tupleslist, key=lambda x: x[1][2])
+
+tuples = [('abc', 'bcd'), ('abc', 'zza')]
+result = Sortbythirdchar(tuples)
+print(result)
+
+
+#Ex12
+def Groupbyrhyme(words):
+    rhymelist = []
+
+    for word in words:
+        addedtogroup = False
+        if len(word) >= 2:
+            rhyme = word[-2:]
+
+            for group in rhymelist:
+                if group[0][-2:] == rhyme:
+                    group.append(word)
+                    addedtogroup = True
+                    break
+            
+            if not addedtogroup:
+                rhymelist.append([word])
+    
+    return rhymelist
+
+words = ['ana', 'banana', 'carte', 'arme', 'parte']
+result = Groupbyrhyme(words)
+print(result)
