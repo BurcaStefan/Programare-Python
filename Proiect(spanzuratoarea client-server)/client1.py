@@ -10,8 +10,15 @@ def connection_with_server():
 
     data=client_socket.recv(1024).decode()
     print(data)
-
-    client_socket.close()
+    
+    return client_socket
+    
+def send_word_and_hint_to_server(client_socket):
+    word=input("Introduceti cuvantul: ")
+    hint=input("Introduceti indiciul: ")
+    client_socket.send(word.encode())
+    client_socket.send(hint.encode())
     
 if __name__ == '__main__':
-    connection_with_server()
+    client_socket=connection_with_server()
+    send_word_and_hint_to_server(client_socket)

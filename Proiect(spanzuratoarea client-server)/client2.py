@@ -11,7 +11,13 @@ def connection_with_server():
     data=client_socket.recv(1024).decode()
     print(data)
 
-    client_socket.close()
+    return client_socket
     
+def recive_word_and_hint_from_server(client_socket):
+    word = client_socket.recv(1024).decode().strip()
+    hint = client_socket.recv(1024).decode().strip()
+    return word, hint    
+
 if __name__ == '__main__':
-    connection_with_server()
+    client_socket=connection_with_server()
+    word, hint = recive_word_and_hint_from_server(client_socket)

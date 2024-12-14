@@ -1,10 +1,6 @@
 import socket
 
-client1=None
-client2=None
-
-def clients_connection():
-    global client1, client2
+def clients_connection(client1,client2):
     host = socket.gethostname()
     port = 5000
 
@@ -19,11 +15,26 @@ def clients_connection():
         if identifier == "client1" and client1 is None:
             client1 = client_socket
             print("Client1 conectat.")
-            client1.send("Conectat la server!\n")
+            client1.send("Conectat la server!\n".encode())
         elif identifier == "client2" and client2 is None:
             client2 = client_socket
             print("Client2 conectat.")
-            client2.send("Conectat la server!\n")
+            client2.send("Conectat la server!\n".encode())
+    
+    return client1, client2
+            
+def recive_word_and_hint_from_client1(client1):
+    word = client1.recv(1024).decode().strip()
+    hint = client1.recv(1024).decode().strip()
+    return word, hint
+
+def send_word_and_hint_to_client2(client2, word, hint):
+    client2.send(word.encode())
+    client2.send(hint.encode())
     
 if __name__ == '__main__':
-    clients_connection()
+    client1=None
+    client2=None
+    client1, client2= clients_connection(client1,client2)
+    word, hint = recive_word_and_hint_from_client1(client1)
+    send_word_and_hint_to_client2(client2, word, hint)
