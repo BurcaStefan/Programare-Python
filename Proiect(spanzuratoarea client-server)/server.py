@@ -26,15 +26,42 @@ def clients_connection(client1,client2):
 def recive_word_and_hint_from_client1(client1):
     word = client1.recv(1024).decode().strip()
     hint = client1.recv(1024).decode().strip()
-    return word, hint
+    return word.lower(), hint
 
 def send_word_and_hint_to_client2(client2, word, hint):
-    client2.send(word.encode())
+    guess_word=""
+    for i in range(0,len(word)):
+        guess_word=guess_word+ "_"
+    
+    client2.send(guess_word.encode())
     client2.send(hint.encode())
+    return guess_word
+    
+def game(client2,guess_word,word):
+    chance=5
+    while chance>0:
+        letter=client2.recv(1024).decode().strip()
+        if letter in word:
+            for i in range(0,len(word)):
+                if word[i]==letter:
+                    guess_word_list=list(guess_word)
+                    guess_word_list[i]=letter
+                    guess_word="".join(guess_word_list)
+                if word==guess_word:
+                    client2.send(guess_word.encode())
+                    client2.send("True".encode())
+                    break
+            client2.send(guess_word.encode())
+            client2.send("Continue".encode())
+        else:
+            client2.send(guess_word.encode())
+            client2.send("False".encode())
+            chance-=1
     
 if __name__ == '__main__':
     client1=None
     client2=None
     client1, client2= clients_connection(client1,client2)
     word, hint = recive_word_and_hint_from_client1(client1)
-    send_word_and_hint_to_client2(client2, word, hint)
+    guess_word=send_word_and_hint_to_client2(client2, word, hint)
+    game(client2,guess_word,word)

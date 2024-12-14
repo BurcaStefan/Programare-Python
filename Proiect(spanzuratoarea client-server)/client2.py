@@ -14,10 +14,30 @@ def connection_with_server():
     return client_socket
     
 def recive_word_and_hint_from_server(client_socket):
-    word = client_socket.recv(1024).decode().strip()
+    guess_word = client_socket.recv(1024).decode().strip()
     hint = client_socket.recv(1024).decode().strip()
-    return word, hint    
+    return guess_word, hint
+
+def game(client_socket,guess_word,hint):
+    chance=5
+    
+    while chance>0:
+        print("\nINDICIUL: ",hint)
+        print(guess_word, "  ", chance)
+        letter=input("Introduceti litera: ")
+        client_socket.send(letter.encode())
+        guess_word=client_socket.recv(1024).decode().strip()
+        data=client_socket.recv(1024).decode().strip()
+        if data=="False":
+            print("Litera nu se afla in cuvant!")
+            chance-=1
+        if data=="True":
+            print("\nAti ghicit cuvantul!")
+            break
+    else:
+        print("\nAti pierdut!")
 
 if __name__ == '__main__':
     client_socket=connection_with_server()
-    word, hint = recive_word_and_hint_from_server(client_socket)
+    guess_word, hint = recive_word_and_hint_from_server(client_socket)
+    game(client_socket,guess_word,hint)
