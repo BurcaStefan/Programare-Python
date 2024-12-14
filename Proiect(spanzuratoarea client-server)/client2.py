@@ -18,16 +18,30 @@ def recive_word_and_hint_from_server(client_socket):
     hint = client_socket.recv(1024).decode().strip()
     return guess_word, hint
 
+def choose_letter():
+    while True:
+        letter=input("Introduceti litera: ")
+        if len(letter)>1:
+            print("Introduceti o singura litera!")
+        elif letter not in "abcdefghijklmnopgrstuvwxyz":
+            print("Introduceti o litera valida!")
+        else:
+            break
+    return letter
+
 def game(client_socket,guess_word,hint):
     chance=5
     
     while chance>0:
         print("\nINDICIUL: ",hint)
         print(guess_word, "  ", chance)
-        letter=input("Introduceti litera: ")
+        
+        letter=choose_letter()
         client_socket.send(letter.encode())
+        
         guess_word=client_socket.recv(1024).decode().strip()
         data=client_socket.recv(1024).decode().strip()
+        
         if data=="False":
             print("Litera nu se afla in cuvant!")
             chance-=1

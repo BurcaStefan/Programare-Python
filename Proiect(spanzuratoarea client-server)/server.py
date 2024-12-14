@@ -31,7 +31,11 @@ def recive_word_and_hint_from_client1(client1):
 def send_word_and_hint_to_client2(client2, word, hint):
     guess_word=""
     for i in range(0,len(word)):
-        guess_word=guess_word+ "_"
+        word_list=list(word)
+        if word_list[i] in "abcdefghijklmnopgrstuvwxyz":
+            guess_word=guess_word+ "_"
+        else:
+            guess_word=guess_word + word_list[i]
     
     client2.send(guess_word.encode())
     client2.send(hint.encode())
@@ -47,10 +51,10 @@ def game(client2,guess_word,word):
                     guess_word_list=list(guess_word)
                     guess_word_list[i]=letter
                     guess_word="".join(guess_word_list)
-                if word==guess_word:
-                    client2.send(guess_word.encode())
-                    client2.send("True".encode())
-                    break
+            if word==guess_word:
+                client2.send(guess_word.encode())
+                client2.send("True".encode())
+                break
             client2.send(guess_word.encode())
             client2.send("Continue".encode())
         else:
