@@ -21,13 +21,13 @@ def recive_word_and_hint_from_server(client_socket):
 def choose_letter():
     while True:
         letter=input("Introduceti litera: ")
-        if len(letter)>1:
+        if len(letter)>1 or len(letter)==0:
             print("Introduceti o singura litera!")
-        elif letter not in "abcdefghijklmnopgrstuvwxyz":
+        elif letter.lower() not in "abcdefghijklmnopgrstuvwxyz":
             print("Introduceti o litera valida!")
         else:
             break
-    return letter
+    return letter.lower()
 
 def game(client_socket,guess_word,hint):
     chance=5
